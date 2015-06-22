@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.0)
+project(boostSerial)
+add_executable(serial main.cpp)
+add_definitions(-std=c++11)
+target_link_libraries(serial boost_system)
