@@ -3,27 +3,44 @@
 #include <vector>
 
 #include <boost/asio/serial_port.hpp>
+#include <boost/asio/read.hpp>
 
 using namespace std;
 using namespace boost::asio;
+
+void readLine(boost::asio::serial_port& serial,
+        std::string& out,
+        const char delimiter = '\n')
+{
+    char c;
+    while(serial.read_some(boost::asio::buffer(&c, 1)))
+    {
+        if(c == delimiter)
+            break;
+
+        out += c;
+    }
+}
 
 main()
 {
     try{
         io_service io;
-        serial_port serial(io, "/dev/ttyUSB6");
+        serial_port serial(io, "/dev/ttyS0");
         std::cout << serial.is_open() << std::endl;
         serial.set_option(serial_port_base::baud_rate(115200));
-        serial.write_some(buffer("atz\n"));
+//        serial.set_option(serial_port_base::flow_control(serial_port_base::flow_control::none));
+//        serial.set_option(serial_port_base::parity(serial_port_base::parity::none));
+//        serial.set_option(serial_port_base::stop_bits(serial_port_base::stop_bits::one));
+//        serial.set_option(serial_port_base::character_size(8));
+        serial.write_some(buffer("ls\n"));
 
-        sleep(1);
-        char c;
-        std::vector<char> buf;
-        serial.read_some(buffer(buf, 10));
+        string line;
+        readLine(serial, line);
+        cout << line << endl;
 
-        std::string resp(buf.begin(), buf.end());
-        std::cout << resp << std::endl;
-        std::cout << buf.size() << std::endl;
+        readLine(serial, line);
+        cout << line << endl;
     }
     catch(const std::exception& e)
     {
