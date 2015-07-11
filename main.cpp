@@ -9,11 +9,11 @@ using namespace std;
 main()
 {
     try{
-        Elm327 elm("/dev/ttyS0", 115200);
-        elm.write("atz\r");
+        Elm327 elm("/dev/ttyUSB0",38400);
 
-
-        elm.readTillPrompt();
+        elm.reset();
+        elm.disableEcho();
+        elm.setProtocol();
     }
     catch(const std::exception& e)
     {
