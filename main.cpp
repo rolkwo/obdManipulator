@@ -14,6 +14,7 @@ main()
         elm.reset();
         elm.disableEcho();
         elm.setProtocol();
+        elm.sendObd(1, 0);
     }
     catch(const std::exception& e)
     {

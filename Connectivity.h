@@ -4,6 +4,7 @@
 #include <boost/asio/serial_port.hpp>
 
 #include <string>
+#include <vector>
 
 class Elm327
 {
@@ -32,13 +33,12 @@ public:
     void reset();
     void setProtocol(const Protocol proto = AUTO);
     void disableEcho();
+    std::vector<std::string> sendObd(const int mode, const int pid);
 
     void expectOk();
 
-    void readLine(std::string& out,
-                  const char delimiter = '\r');
-    void readTillPrompt();
-    void readTillPrompt(std::string& out);
+    std::string readLine(const char delimiter = '\r');
+    std::string readTillPrompt();
 
     void write(const std::string& data);
     void writeLine(const std::string& data);

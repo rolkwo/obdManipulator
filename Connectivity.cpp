@@ -1,7 +1,10 @@
 #include <Connectivity.h>
 
+#include <iomanip>
 #include <sstream>
 #include <stdexcept>
+
+#include <boost/algorithm/string.hpp>
 
 // just for debug
 #include <iostream>
@@ -24,16 +27,31 @@ void Elm327::setProtocol(const Protocol proto)
 void Elm327::disableEcho()
 {
     writeLine("ate0");
-    std::string dummy;
 
-    readLine(dummy);    //to read echoed ate
+    readLine();    //to read echoed ate
     expectOk();
+}
+
+std::vector<std::string> Elm327::sendObd(const int mode, const int pid)
+{
+    std::ostringstream oss;
+
+    oss << std::setw(2) << std::setbase(16) << mode << pid;
+    writeLine(oss.str());
+
+    std::string resp = readTillPrompt();
+    std::vector<std::string> lines;
+    boost::split(lines, resp, boost::is_any_of("\r"));
+
+    if(lines.front() == "SEARCHING...")
+        lines.erase(lines.begin());
+
+    return lines;
 }
 
 void Elm327::expectOk()
 {
-    std::string line;
-    readLine(line);
+    std::string line = readLine();
 
     if(line != "OK")
         throw std::runtime_error("Expected OK while response is " + line);
@@ -41,10 +59,9 @@ void Elm327::expectOk()
     readTillPrompt();
 }
 
-void Elm327::readLine(std::string& out,
-                      const char delimiter)
+std::string Elm327::readLine(const char delimiter)
 {
-    out.clear();
+    std::string out;
 
     char c;
     while(_serial.read_some(boost::asio::buffer(&c, 1)))
@@ -54,24 +71,13 @@ void Elm327::readLine(std::string& out,
 
         out += c;
     }
+
+    return out;
 }
 
-
-void Elm327::readTillPrompt()
+std::string Elm327::readTillPrompt()
 {
-    char c;
-
-    while(_serial.read_some(boost::asio::buffer(&c, 1)))
-    {
-        if(c == '>')
-            break;
-    }
-}
-
-void Elm327::readTillPrompt(std::string& out)
-
-{
-    out.clear();
+    std::string out;
 
     char c;
 
@@ -82,6 +88,8 @@ void Elm327::readTillPrompt(std::string& out)
 
         out += c;
     }
+
+    return out;
 }
 
 void Elm327::write(const std::string& data)
