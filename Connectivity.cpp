@@ -39,14 +39,17 @@ std::vector<std::string> Elm327::sendObd(const int mode, const int pid)
     oss << std::setw(2) << std::setbase(16) << mode << pid;
     writeLine(oss.str());
 
-    std::string resp = readTillPrompt();
-    std::vector<std::string> lines;
-    boost::split(lines, resp, boost::is_any_of("\r"));
+    return getObdLines(2);
+}
 
-    if(lines.front() == "SEARCHING...")
-        lines.erase(lines.begin());
+std::vector<std::string> Elm327::sendObd(const int mode)
+{
+    std::ostringstream oss;
 
-    return lines;
+    oss << std::setw(2) << std::setbase(16) << mode;
+    writeLine(oss.str());
+
+    return getObdLines(1);
 }
 
 void Elm327::expectOk()
@@ -101,4 +104,28 @@ void Elm327::writeLine(const std::string &data)
 {
     write(data);
     write("\r");
+}
+
+std::vector<std::string> Elm327::getObdLines(const int bytesToCut)
+{
+    std::string resp = readTillPrompt();
+    std::vector<std::string> lines;
+    boost::split(lines, resp, boost::is_any_of("\r"));
+
+    if(lines.front() == "SEARCHING...")
+        lines.erase(lines.begin());
+
+    if(lines.front() == "NO DATA")
+        throw std::runtime_error("No data while waiting for response");
+
+    const int charToCut = 3 * bytesToCut;   //2 chars per byte + space
+    if(lines.size() > 1)
+    {
+        for(auto& line : lines)
+            line.erase(0, charToCut + 3);   //remove response header and line number
+    }
+    else
+        lines.front().erase(0, charToCut);
+
+    return lines;
 }

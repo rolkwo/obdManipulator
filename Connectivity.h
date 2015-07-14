@@ -34,6 +34,7 @@ public:
     void setProtocol(const Protocol proto = AUTO);
     void disableEcho();
     std::vector<std::string> sendObd(const int mode, const int pid);
+    std::vector<std::string> sendObd(const int mode);
 
     void expectOk();
 
@@ -45,6 +46,8 @@ public:
 
 
 private:
+    std::vector<std::string> getObdLines(const int bytesToCut);
+
     std::string _device;
     boost::asio::io_service _io;
     boost::asio::serial_port _serial;
