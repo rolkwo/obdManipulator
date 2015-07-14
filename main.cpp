@@ -9,7 +9,7 @@ using namespace std;
 main()
 {
     try{
-        Elm327 elm("/dev/ttyUSB0",38400);
+        Elm327& elm = Elm327::getDevice("/dev/ttyUSB0",38400);
 
         elm.reset();
         elm.disableEcho();

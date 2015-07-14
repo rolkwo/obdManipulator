@@ -9,6 +9,23 @@
 // just for debug
 #include <iostream>
 
+std::map<std::string, Elm327*> Elm327::_devices;
+
+Elm327& Elm327::getDevice(const std::string& device, const int baudrate)
+{
+    auto elm = _devices.find(device);
+
+    if(elm != _devices.end())
+        return *(elm->second);
+
+    if(baudrate == 0)
+        throw std::runtime_error("Device not found");
+
+    _devices[device] = new Elm327(device, baudrate);
+
+    return *(_devices[device]);
+}
+
 void Elm327::reset()
 {
     writeLine("atz");

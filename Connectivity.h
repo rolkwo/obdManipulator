@@ -3,6 +3,7 @@
 
 #include <boost/asio/serial_port.hpp>
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -24,11 +25,8 @@ public:
         J1929CAN
     };
 
-    Elm327(const std::string& device, const int baudrate)
-        :_device(device), _serial(_io, device)
-    {
-        _serial.set_option(boost::asio::serial_port_base::baud_rate(baudrate));
-    }
+    static Elm327& getDevice(const std::string& device, const int baudrate = 0);
+
 
     void reset();
     void setProtocol(const Protocol proto = AUTO);
@@ -47,6 +45,14 @@ public:
 
 private:
     std::vector<std::string> getObdLines(const int bytesToCut);
+
+    Elm327(const std::string& device, const int baudrate)
+        :_device(device), _serial(_io, device)
+    {
+        _serial.set_option(boost::asio::serial_port_base::baud_rate(baudrate));
+    }
+
+    static std::map<std::string, Elm327*> _devices;
 
     std::string _device;
     boost::asio::io_service _io;
