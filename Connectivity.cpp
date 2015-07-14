@@ -132,7 +132,7 @@ std::vector<std::string> Elm327::getObdLines(const int bytesToCut)
     if(lines.front() == "SEARCHING...")
         lines.erase(lines.begin());
 
-    if(lines.front() == "NO DATA")
+    if(lines.front() == "NO DATA" || lines.front() == "UNABLE TO CONNECT")
         throw std::runtime_error("No data while waiting for response");
 
     const int charToCut = 3 * bytesToCut;   //2 chars per byte + space
