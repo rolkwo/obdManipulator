@@ -34,6 +34,7 @@ public:
     std::vector<std::string> sendObd(const int mode, const int pid);
     std::vector<std::string> sendObd(const int mode);
 
+private:
     void expectOk();
 
     std::string readLine(const char delimiter = '\r');
@@ -42,8 +43,6 @@ public:
     void write(const std::string& data);
     void writeLine(const std::string& data);
 
-
-private:
     std::vector<std::string> getObdLines(const int bytesToCut);
 
     Elm327(const std::string& device, const int baudrate)
