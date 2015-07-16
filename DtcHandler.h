@@ -1,5 +1,5 @@
 #ifndef _DTCREADER_H_
-#define _DTCRAEDER_H_
+#define _DTCREADER_H_
 
 #include "Connectivity.h"
 
@@ -23,6 +23,7 @@ public:
     }
 
     std::vector<Dtc> getCodes();
+    void resetCodes();
 
 private:
     std::vector<Dtc> prepareCodes(const std::vector<std::string>& lines);
@@ -33,5 +34,7 @@ private:
 
     static const std::map<const char, const std::string> _translation;
 };
+
+std::ostream& operator<<(std::ostream& out, const DtcHandler::Dtc& dtc);
 
 #endif

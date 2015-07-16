@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 project(boostSerial)
 include_directories(${PROJECT_SOURCE_DIR})
-add_executable(serial main.cpp Connectivity.cpp DtcHandler.cpp)
+add_executable(serial main.cpp Connectivity.cpp DtcHandler.cpp VechicleInfoHandler.cpp)
 add_definitions(-std=c++11)
 target_link_libraries(serial boost_system)

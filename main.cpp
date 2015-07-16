@@ -3,10 +3,11 @@
 #include <vector>
 
 #include "Connectivity.h"
+#include "DtcHandler.h"
 
 using namespace std;
 
-main()
+int main()
 {
     try{
         Elm327& elm = Elm327::getDevice("/dev/ttyUSB0",38400);
@@ -14,10 +15,17 @@ main()
         elm.reset();
         elm.disableEcho();
         elm.setProtocol();
-        elm.sendObd(1, 0);
+
+        DtcHandler dtcHandler("/dev/ttyUSB0");
+        auto codes = dtcHandler.getCodes();
+
+        for(const auto& code : codes)
+            std::cout << code << std::endl;
     }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << std::endl;
     }
+
+    return 0;
 }
