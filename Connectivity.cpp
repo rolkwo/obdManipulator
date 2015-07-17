@@ -53,7 +53,7 @@ std::vector<std::string> Elm327::sendObd(const int mode, const int pid)
 {
     std::ostringstream oss;
 
-    oss << std::setw(2) << std::setbase(16) << mode << pid;
+    oss << std::setfill('0') << std::setw(2) << std::setbase(16) << mode << pid;
     writeLine(oss.str());
 
     return getObdLines(2);
@@ -63,7 +63,7 @@ std::vector<std::string> Elm327::sendObd(const int mode)
 {
     std::ostringstream oss;
 
-    oss << std::setw(2) << std::setbase(16) << mode;
+    oss << std::setfill('0') << std::setw(2) << std::setbase(16) << mode;
     writeLine(oss.str());
 
     return getObdLines(1);
