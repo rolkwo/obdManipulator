@@ -4,3 +4,7 @@ include_directories(${PROJECT_SOURCE_DIR})
 add_executable(serial main.cpp Connectivity.cpp DtcHandler.cpp VechicleInfoHandler.cpp)
 add_definitions(-std=c++11)
 target_link_libraries(serial boost_system)
+
+add_executable(tests ${PROJECT_SOURCE_DIR}/tests/tests.cpp ${PROJECT_SOURCE_DIR}/tests/ConnectivityMock.cpp DtcHandler.cpp VechicleInfoHandler.cpp)
+add_definitions(-std=c++11)
+target_link_libraries(tests boost_system gtest)

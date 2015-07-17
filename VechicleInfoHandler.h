@@ -15,7 +15,9 @@ public:
 
     std::string getVin();
 
-private:
+protected:
+    std::string processLines(const std::vector<std::string>& lines);
+
     Elm327& _device;
 };
 
