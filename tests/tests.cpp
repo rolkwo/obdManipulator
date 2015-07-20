@@ -1,4 +1,5 @@
 #include "VechicleInfoHandler.h"
+#include "Utils.h"
 
 #include "gtest/gtest.h"
 
@@ -22,7 +23,15 @@ TEST_F(VechicleInfoHandlerTest, vinParsing)
                                       "35 42 31 32",
                                       "33 34 35 36"};
 
-    EXPECT_EQ(processLines(lines), "1D4GP00R55B123456");
+    EXPECT_EQ("1D4GP00R55B123456", processLines(lines));
+}
+
+TEST(Utils, getAvailablePids)
+{
+    EXPECT_TRUE(Utils::checkPidSupport("", 1, 1));
+    EXPECT_FALSE(Utils::checkPidSupport("", 1, 16));
+    EXPECT_TRUE(Utils::checkPidSupport("", 1, 21));
+    EXPECT_FALSE(Utils::checkPidSupport("", 1, 36));
 }
 
 }

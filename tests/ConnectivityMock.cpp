@@ -30,6 +30,10 @@ void Elm327::disableEcho()
 
 std::vector<std::string> Elm327::sendObd(const int mode, const int pid)
 {
+    if(mode == 1 && (pid == 0 || pid == 20))
+        return std::vector<std::string>() = {"BE 1F B8 10"};
+
+
     return std::vector<std::string>();
 }
 

@@ -4,6 +4,8 @@
 
 #include "Connectivity.h"
 #include "DtcHandler.h"
+#include "VechicleInfoHandler.h"
+#include "Utils.h"
 
 using namespace std;
 
@@ -21,6 +23,11 @@ int main()
 
         for(const auto& code : codes)
             std::cout << code << std::endl;
+
+        VechicleInfoHandler vechicleInfo("/dev/ttyUSB0");
+        std::string vin = vechicleInfo.getVin();
+
+        std::cout << "VIN: " << vin << std::endl;
     }
     catch(const std::exception& e)
     {
