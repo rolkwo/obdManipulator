@@ -1,8 +1,10 @@
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include "Connectivity.h"
+#include "DataTranslator.h"
 #include "DtcHandler.h"
 #include "VechicleInfoHandler.h"
 #include "Utils.h"
@@ -28,6 +30,10 @@ int main()
         std::string vin = vechicleInfo.getVin();
 
         std::cout << "VIN: " << vin << std::endl;
+
+        DataTranslator curTranslator(std::make_shared<CurrentGetter>("/dev/ttyUSB0"));
+
+        std::cout << "Coolant temp " << curTranslator.engineCoolantTemperature() << std::endl;
     }
     catch(const std::exception& e)
     {

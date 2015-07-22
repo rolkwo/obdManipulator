@@ -5,9 +5,14 @@
 #include <stdexcept>
 #include <vector>
 
-std::string DataTranslator::fuelSystemStatus(const std::string& hexString)
+DataTranslator::DataTranslator(std::shared_ptr<Getter> getter)
+    : _getter(getter)
 {
-    std::vector<uint8_t> bytes = prepareBytes(hexString);
+}
+
+std::string DataTranslator::fuelSystemStatus()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(3));
 
     if(bytes.size() < 1)
         throw std::runtime_error("Fuel system status should return at least one byte");
@@ -26,9 +31,9 @@ std::string DataTranslator::fuelSystemStatus(const std::string& hexString)
     return "Invalid value";
 }
 
-std::string DataTranslator::calculatedEngineLoad(const std::string& hexString)
+std::string DataTranslator::calculatedEngineLoad()
 {
-    std::vector<uint8_t> bytes = prepareBytes(hexString);
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(4));
 
     if(bytes.size() != 1)
         throw std::runtime_error("Calculated engine load should return one byte");
@@ -36,9 +41,9 @@ std::string DataTranslator::calculatedEngineLoad(const std::string& hexString)
     return std::to_string((bytes[0]*100)/255) + "%";
 }
 
-std::string DataTranslator::engineCoolantTemperature(const std::string& hexString)
+std::string DataTranslator::engineCoolantTemperature()
 {
-    std::vector<uint8_t> bytes = prepareBytes(hexString);
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(5));
 
     if(bytes.size() != 1)
         throw std::runtime_error("Engine coolant temperature should return one byte");
@@ -46,9 +51,9 @@ std::string DataTranslator::engineCoolantTemperature(const std::string& hexStrin
     return std::to_string(bytes[0]-40) + " Celsius degrees";
 }
 
-std::string DataTranslator::shortTermFuelTrimBank1(const std::string &hexString)
+std::string DataTranslator::shortTermFuelTrimBank1()
 {
-    auto bytes = prepareBytes(hexString);
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(6));
 
     if(bytes.size() != 1)
         throw std::runtime_error("Short term fuel trim should return one byte");
@@ -56,9 +61,9 @@ std::string DataTranslator::shortTermFuelTrimBank1(const std::string &hexString)
     return std::to_string(((bytes[0] - 128) * 100) / 128) + "%";
 }
 
-std::string DataTranslator::longTermFuelTrimBank1(const std::string &hexString)
+std::string DataTranslator::longTermFuelTrimBank1()
 {
-    auto bytes = prepareBytes(hexString);
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(7));
 
     if(bytes.size() != 1)
         throw std::runtime_error("Long term fuel trim should return one byte");
@@ -66,9 +71,9 @@ std::string DataTranslator::longTermFuelTrimBank1(const std::string &hexString)
     return std::to_string(((bytes[0] - 128) * 100) / 128) + "%";
 }
 
-std::string DataTranslator::shortTermFuelTrimBank2(const std::string &hexString)
+std::string DataTranslator::shortTermFuelTrimBank2()
 {
-    auto bytes = prepareBytes(hexString);
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(8));
 
     if(bytes.size() != 1)
         throw std::runtime_error("Short term fuel trim should return one byte");
@@ -76,9 +81,9 @@ std::string DataTranslator::shortTermFuelTrimBank2(const std::string &hexString)
     return std::to_string(((bytes[0] - 128) * 100) / 128) + "%";
 }
 
-std::string DataTranslator::longTermFuelTrimBank2(const std::string &hexString)
+std::string DataTranslator::longTermFuelTrimBank2()
 {
-    auto bytes = prepareBytes(hexString);
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(9));
 
     if(bytes.size() != 1)
         throw std::runtime_error("Long term fuel trim should return one byte");
@@ -92,4 +97,34 @@ std::vector<uint8_t> DataTranslator::prepareBytes(const std::string& hexString)
     Utils::removeSpaces(localHex);
 
     return Utils::hexStrToByteArray(localHex);
+}
+
+std::vector<uint8_t> DataTranslator::prepareBytes(const std::vector<std::string>& lines)
+{
+    std::string oneLine;
+
+    for(auto& line : lines)
+        oneLine += line;
+
+    return prepareBytes(oneLine);
+}
+
+CurrentGetter::CurrentGetter(const std::string& dev)
+    : _dev(Elm327::getDevice(dev))
+{
+}
+
+std::vector<std::string> CurrentGetter::getPid(const int pid)
+{
+    return _dev.sendObd(1, pid);
+}
+
+FreezeFrameGetter::FreezeFrameGetter(const std::string& dev)
+    : _dev(Elm327::getDevice(dev))
+{
+}
+
+std::vector<std::string> FreezeFrameGetter::getPid(const int pid)
+{
+    return _dev.sendObd(1, pid);
 }
