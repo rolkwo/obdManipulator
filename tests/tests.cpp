@@ -57,6 +57,28 @@ TEST(DataTranslator, engineCoolantTemperature)
     EXPECT_EQ("10 Celsius degrees", translator.engineCoolantTemperature());
 }
 
+TEST(DataTranslator, calculatedEngineLoad)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("50");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("31%", translator.calculatedEngineLoad());
+}
+
+TEST(DataTranslator, shortTermFuelTrimBank1)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("F0");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("87%", translator.shortTermFuelTrimBank1());
+}
+
 }
 
 int main(int argc, char **argv)
