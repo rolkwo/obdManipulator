@@ -8,15 +8,17 @@
 
 bool Utils::checkPidSupport(const std::string& dev, const int mode, const int pid)
 {
-    int pidToRead = (pid / 20) * 20;
+    const int localPid = pid - 1;
+    int pidToRead = (localPid / 20) * 20;
 
     Elm327& elm = Elm327::getDevice(dev);
     std::string resp = elm.sendObd(mode, pidToRead).front();
 
+    removeSpaces(resp);
     auto availablePids = hexStrToByteArray(resp);
 
-    int pidInSet = pid - pidToRead;
-    uint8_t bitPos = 1 << (pidInSet % 8);
+    int pidInSet = localPid - pidToRead;
+    uint8_t bitPos = 1 << (7 - (pidInSet % 8));
     int byte = pidInSet / 8;
 
     return availablePids[byte] & bitPos;
@@ -62,12 +64,8 @@ std::vector<uint8_t> Utils::hexStrToByteArray(const std::string& hexStr)
     while(!str.empty())
     {
         std::string hex = str.substr(0, 2);
-        std::stringstream ss;
 
-        ss << std::hex << hex;
-
-        uint8_t c;
-        ss >> c;
+        uint8_t c = std::stoul(hex, 0, 16);
 
         str.erase(0, 2);
 

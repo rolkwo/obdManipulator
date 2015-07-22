@@ -1,3 +1,4 @@
+#include "DataTranslator.h"
 #include "VechicleInfoHandler.h"
 #include "Utils.h"
 
@@ -29,9 +30,31 @@ TEST_F(VechicleInfoHandlerTest, vinParsing)
 TEST(Utils, getAvailablePids)
 {
     EXPECT_TRUE(Utils::checkPidSupport("", 1, 1));
-    EXPECT_FALSE(Utils::checkPidSupport("", 1, 16));
-    EXPECT_TRUE(Utils::checkPidSupport("", 1, 21));
-    EXPECT_FALSE(Utils::checkPidSupport("", 1, 36));
+    EXPECT_FALSE(Utils::checkPidSupport("", 1, 18));
+    EXPECT_TRUE(Utils::checkPidSupport("", 1, 32));
+    EXPECT_FALSE(Utils::checkPidSupport("", 1, 22));
+}
+
+class FakeGetter : public Getter
+{
+public:
+    virtual std::vector<std::string> getPid(const int pid) override
+    {
+        return _toReturn;
+    }
+
+    std::vector<std::string> _toReturn;
+};
+
+TEST(DataTranslator, engineCoolantTemperature)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("32");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("10 Celsius degrees", translator.engineCoolantTemperature());
 }
 
 }
