@@ -39,6 +39,9 @@ std::vector<std::string> Elm327::sendObd(const int mode, const int pid)
 
 std::vector<std::string> Elm327::sendObd(const int mode)
 {
+    if(mode == 3)
+        return std::vector<std::string>() = {"01 33 00 00 00 00"};
+
     return std::vector<std::string>();
 }
 

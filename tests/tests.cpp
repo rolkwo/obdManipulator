@@ -1,4 +1,5 @@
 #include "DataTranslator.h"
+#include "DtcHandler.h"
 #include "VechicleInfoHandler.h"
 #include "Utils.h"
 
@@ -33,6 +34,15 @@ TEST(Utils, getAvailablePids)
     EXPECT_FALSE(Utils::checkPidSupport("", 1, 18));
     EXPECT_TRUE(Utils::checkPidSupport("", 1, 32));
     EXPECT_FALSE(Utils::checkPidSupport("", 1, 22));
+}
+
+TEST(Dtc, getDtc)
+{
+    DtcHandler dtcHandler("mock");
+
+    auto dtcs = dtcHandler.getCodes();
+    EXPECT_EQ(1, dtcs.size());
+    EXPECT_EQ("P0133", dtcs.front().code);
 }
 
 class FakeGetter : public Getter

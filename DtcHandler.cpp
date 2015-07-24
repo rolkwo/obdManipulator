@@ -1,5 +1,7 @@
 #include "DtcHandler.h"
 
+#include "Utils.h"
+
 #include <ostream>
 #include <stdexcept>
 
@@ -57,11 +59,14 @@ std::vector<DtcHandler::Dtc> DtcHandler::interpretCodes(const std::string& line)
     if(line.size() != 17)
         throw std::runtime_error("Incorrect DTC line to parse");
 
+    std::string lineNoSpaces = line;
+    Utils::removeSpaces(lineNoSpaces);
+
     std::vector<Dtc> ret;
 
     for(int i = 0; i < 3; ++i)
     {
-        std::string code = getCode(line.substr(i * 7, 5));
+        std::string code = getCode(lineNoSpaces.substr(i * 4, 4));
         if(code.empty())
             continue;
 
@@ -77,11 +82,11 @@ std::string DtcHandler::getCode(const std::string& twoBytes)
 {
     std::string ret;
 
-    if(twoBytes == "00 00 ")
+    if(twoBytes == "0000")
         return ret;
 
     ret = _translation.at(twoBytes[0]);
-    ret += twoBytes.substr(3, 2);
+    ret += twoBytes.substr(1, 3);
 
     return ret;
 }
