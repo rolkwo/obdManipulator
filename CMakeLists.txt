@@ -8,3 +8,7 @@ target_link_libraries(serial boost_system)
 add_executable(tests ${PROJECT_SOURCE_DIR}/tests/tests.cpp ${PROJECT_SOURCE_DIR}/tests/ConnectivityMock.cpp DtcHandler.cpp VechicleInfoHandler.cpp Utils.cpp DataTranslator.cpp)
 add_definitions(-std=c++11)
 target_link_libraries(tests boost_system gtest)
+
+add_executable(connectivityTest ${PROJECT_SOURCE_DIR}/tests/connectivityTest/connectivityTest.cpp Connectivity.cpp)
+add_definitions(-std=c++11)
+target_link_libraries(connectivityTest gtest boost_system)

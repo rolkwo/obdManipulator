@@ -34,11 +34,11 @@ public:
     std::vector<std::string> sendObd(const int mode, const int pid);
     std::vector<std::string> sendObd(const int mode);
 
-private:
+protected:
     void expectOk();
 
     std::string readLine(const char delimiter = '\r');
-    std::string readTillPrompt();
+virtual    std::string readTillPrompt();
 
     void write(const std::string& data);
     void writeLine(const std::string& data);
