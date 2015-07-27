@@ -106,6 +106,125 @@ TEST(DataTranslator, shortTermFuelTrimBank1)
     EXPECT_EQ("87%", translator.shortTermFuelTrimBank1());
 }
 
+TEST(DataTranslator, fuelPressure)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("10");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("48kPa", translator.fuelPressure());
+}
+
+TEST(DataTranslator, absoluteIntakeManifoldPressure)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("80");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("128kPa", translator.intakeManifoldAbsolutePressure());
+}
+
+TEST(DataTranslator, engineRpm)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("0F 10");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("964RPM", translator.engineRpm());
+}
+
+TEST(DataTranslator, vechicleSpeed)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("64");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("100km/h", translator.vechicleSpeed());
+}
+
+TEST(DataTranslator, timingAdvance)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("18");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("-52deg (relative to firs cylinder)", translator.timingAdvance());
+}
+
+TEST(DataTranslator, intakeAirTempereature)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("42");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("26 Celsius degrees", translator.intakeAirTemperature());
+}
+
+TEST(DataTranslator, mafAirFlowrate)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("12 34");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("46g/s", translator.mafAirFlowRate());
+}
+
+TEST(DataTranslator, throttlePosition)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("7F");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("49%", translator.throttlePosition());
+}
+
+
+
+
+
+
+
+
+
+
+TEST(DataTranslator, timeRunWithMilOn)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("10 01");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("4097 minutes", translator.timeRunWithMilOn());
+}
+
+TEST(DataTranslator, timeSineTroubleCodesCleared)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("FF F0");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("65520 minutes", translator.timeSinceTroubleCodesCleared());
+}
+
 }
 
 int main(int argc, char **argv)

@@ -108,6 +108,115 @@ std::string DataTranslator::longTermFuelTrimBank2()
     return std::to_string(((bytes[0] - 128) * 100) / 128) + "%";
 }
 
+std::string DataTranslator::fuelPressure()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(0xa));
+
+    if(bytes.size() != 1)
+        throw std::runtime_error("Fuel pressure should return one byte");
+
+    return std::to_string(bytes[0] * 3) + "kPa";
+}
+
+std::string DataTranslator::intakeManifoldAbsolutePressure()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(0xb));
+
+    if(bytes.size() != 1)
+        throw std::runtime_error("Absolute manifold pressure should return one byte");
+
+    return std::to_string(bytes[0]) + "kPa";
+}
+
+std::string DataTranslator::engineRpm()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(0xc));
+
+    if(bytes.size() != 2)
+        throw std::runtime_error("engine RPM should return two bytes");
+
+    return std::to_string(((bytes[0] * 256) + bytes[1]) / 4) + "RPM";
+}
+
+std::string DataTranslator::vechicleSpeed()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(0xd));
+
+    if(bytes.size() != 1)
+        throw std::runtime_error("Vechicle speed should return one byte");
+
+    return std::to_string(bytes[0]) + "km/h";
+}
+
+std::string DataTranslator::timingAdvance()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(0xe));
+
+    if(bytes.size() != 1)
+        throw std::runtime_error("Timing advance should return one byte");
+
+    return std::to_string((bytes[0] - 128) / 2) + "deg (relative to firs cylinder)";
+}
+
+std::string DataTranslator::intakeAirTemperature()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(0xf));
+
+    if(bytes.size() != 1)
+        throw std::runtime_error("Intake air temperature should return one byte");
+
+    return std::to_string(bytes[0]-40) + " Celsius degrees";
+}
+
+std::string DataTranslator::mafAirFlowRate()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(0x10));
+
+    if(bytes.size() != 2)
+        throw std::runtime_error("MAF air flow rate should return two bytes");
+
+    return std::to_string(((bytes[0] * 256) + bytes[1]) / 100) + "g/s";
+}
+
+std::string DataTranslator::throttlePosition()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(0x11));
+
+    if(bytes.size() != 1)
+        throw std::runtime_error("Throttle position should return one byte");
+
+    return std::to_string((bytes[0] * 100) / 255) + "%";
+}
+
+
+
+
+
+
+
+
+
+
+std::string DataTranslator::timeRunWithMilOn()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(0x4d));
+
+    if(bytes.size() != 2)
+        throw std::runtime_error("Time run with MIL on should return two bytes");
+
+    return std::to_string((bytes[0] * 256) + bytes[1]) + " minutes";
+}
+
+std::string DataTranslator::timeSinceTroubleCodesCleared()
+{
+    std::vector<uint8_t> bytes = prepareBytes(_getter->getPid(0x4e));
+
+    if(bytes.size() != 2)
+        throw std::runtime_error("Time since trouble codes cleared should return two bytes");
+
+    return std::to_string((bytes[0] * 256) + bytes[1]) + " minutes";
+}
+
 std::vector<uint8_t> DataTranslator::prepareBytes(const std::string& hexString)
 {
     std::string localHex(hexString);

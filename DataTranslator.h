@@ -63,6 +63,17 @@ public:
     std::string longTermFuelTrimBank1();
     std::string shortTermFuelTrimBank2();
     std::string longTermFuelTrimBank2();
+    std::string fuelPressure();
+    std::string intakeManifoldAbsolutePressure();
+    std::string engineRpm();
+    std::string vechicleSpeed();
+    std::string timingAdvance();
+    std::string intakeAirTemperature();
+    std::string mafAirFlowRate();
+    std::string throttlePosition();
+
+    std::string timeRunWithMilOn();
+    std::string timeSinceTroubleCodesCleared();
 
 private:
     std::vector<uint8_t> prepareBytes(const std::string& hexString);
