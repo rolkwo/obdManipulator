@@ -1,3 +1,20 @@
+// ObdManipulator - simple tool to test your car using ELM327
+// Copyright (C) 2015  Roland Kwolek
+// 
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+// 
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
 #include "DataTranslator.h"
 #include "DtcHandler.h"
 #include "VechicleInfoHandler.h"
@@ -87,6 +104,125 @@ TEST(DataTranslator, shortTermFuelTrimBank1)
     DataTranslator translator(getter);
 
     EXPECT_EQ("87%", translator.shortTermFuelTrimBank1());
+}
+
+TEST(DataTranslator, fuelPressure)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("10");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("48kPa", translator.fuelPressure());
+}
+
+TEST(DataTranslator, absoluteIntakeManifoldPressure)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("80");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("128kPa", translator.intakeManifoldAbsolutePressure());
+}
+
+TEST(DataTranslator, engineRpm)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("0F 10");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("964RPM", translator.engineRpm());
+}
+
+TEST(DataTranslator, vechicleSpeed)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("64");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("100km/h", translator.vechicleSpeed());
+}
+
+TEST(DataTranslator, timingAdvance)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("18");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("-52deg (relative to firs cylinder)", translator.timingAdvance());
+}
+
+TEST(DataTranslator, intakeAirTempereature)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("42");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("26 Celsius degrees", translator.intakeAirTemperature());
+}
+
+TEST(DataTranslator, mafAirFlowrate)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("12 34");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("46g/s", translator.mafAirFlowRate());
+}
+
+TEST(DataTranslator, throttlePosition)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("7F");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("49%", translator.throttlePosition());
+}
+
+
+
+
+
+
+
+
+
+
+TEST(DataTranslator, timeRunWithMilOn)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("10 01");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("4097 minutes", translator.timeRunWithMilOn());
+}
+
+TEST(DataTranslator, timeSineTroubleCodesCleared)
+{
+    auto getter = std::make_shared<FakeGetter>();
+
+    getter->_toReturn.push_back("FF F0");
+
+    DataTranslator translator(getter);
+
+    EXPECT_EQ("65520 minutes", translator.timeSinceTroubleCodesCleared());
 }
 
 }
