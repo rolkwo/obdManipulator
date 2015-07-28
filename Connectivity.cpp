@@ -135,6 +135,9 @@ std::vector<std::string> Elm327::getObdLines(const int bytesToCut)
     if(lines.front() == "NO DATA" || lines.front() == "UNABLE TO CONNECT")
         throw std::runtime_error("No data while waiting for response");
 
+    auto newEnd = std::remove(lines.begin(), lines.end(), "");
+    lines.erase(newEnd, lines.end());
+
     const int charToCut = 3 * bytesToCut;   //2 chars per byte + space
     if(lines.size() > 1)
     {
