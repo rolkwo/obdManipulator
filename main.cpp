@@ -48,9 +48,9 @@ int main()
 
         std::cout << "VIN: " << vin << std::endl;
 
-        DataTranslator curTranslator(std::make_shared<CurrentGetter>("/dev/ttyUSB0"));
-
-        std::cout << "Coolant temp " << curTranslator.engineCoolantTemperature() << std::endl;
+//        DataTranslator curTranslator(std::make_shared<CurrentGetter>("/dev/ttyUSB0"));
+//
+//        std::cout << "Coolant temp " << curTranslator.engineCoolantTemperature() << std::endl;
     }
     catch(const std::exception& e)
     {

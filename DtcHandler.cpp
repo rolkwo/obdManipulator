@@ -73,11 +73,11 @@ std::vector<DtcHandler::Dtc> DtcHandler::prepareCodes(const std::vector<std::str
 
 std::vector<DtcHandler::Dtc> DtcHandler::interpretCodes(const std::string& line)
 {
-    if(line.size() != 17)
-        throw std::runtime_error("Incorrect DTC line to parse");
-
     std::string lineNoSpaces = line;
     Utils::removeSpaces(lineNoSpaces);
+
+    if(lineNoSpaces.size() != 12)
+        throw std::runtime_error("Incorrect DTC line to parse");
 
     std::vector<Dtc> ret;
 
